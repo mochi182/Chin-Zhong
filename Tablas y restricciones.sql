@@ -75,14 +75,17 @@ MINVALUE 1;
 
 CREATE TABLE empleado(
     id_empleado NUMBER NOT NULL,
+    cedula VARCHAR(30),
     nombre VARCHAR(50),
     apellido VARCHAR(50),
+    fecha_de_nacimiento DATE,
     edad NUMBER,
     ocupacion VARCHAR(50),
     sexo VARCHAR(1),
     PRIMARY KEY(id_empleado)
 );
 ALTER TABLE empleado ADD CHECK (sexo='M' OR sexo='F');
+ALTER TABLE empleado ADD UNIQUE (cedula);
 
 CREATE SEQUENCE secuencia_id_empleado
 START WITH 1
@@ -99,6 +102,7 @@ CREATE TABLE cliente(
     PRIMARY KEY(id_cliente)
 );
 ALTER TABLE cliente ADD CHECK (sexo='M' OR sexo='F');
+ALTER TABLE cliente ADD UNIQUE (cedula);
 
 CREATE SEQUENCE secuencia_id_cliente
 START WITH 1
