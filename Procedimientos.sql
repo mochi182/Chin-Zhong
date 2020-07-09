@@ -40,7 +40,7 @@ CREATE OR REPLACE PROCEDURE insertar_categoria(
     -- Procedimiento para ingresar en tabla "bodega".
     p_abreviatura categoria.abreviatura%TYPE,
     p_descripcion categoria.descripcion%TYPE,
-    p_nombre categoria.nombre%TYPE,
+    p_nombre categoria.estado%TYPE,
     p_mensaje OUT VARCHAR2
     ) AS
     BEGIN
@@ -72,15 +72,6 @@ CREATE OR REPLACE PROCEDURE insertar_bodega(
     END insertar_bodega;
     /
 
-DECLARE
-    v_ubicacion bodega.ubicacion%TYPE := 'Ciudad de Panamá';
-    v_area bodega.area%TYPE := 2000;
-    mensaje VARCHAR2(50);
-BEGIN
-    insertar_bodega(v_ubicacion, v_area, mensaje);
-    DBMS_OUTPUT.PUT_LINE(mensaje);
-END;
-/
 
 /* --------------- Nivel 2 --------------- */
 
@@ -105,17 +96,20 @@ CREATE OR REPLACE PROCEDURE insertar_articulo(
 
 CREATE OR REPLACE PROCEDURE insertar_empleado(
     -- Procedimiento para ingresar en tabla "bodega".
+    p_cedula empleado.cedula%TYPE,
     p_nombre empleado.nombre%TYPE,
     p_apellido empleado.apellido%TYPE,
-    p_edad empleado.edad%TYPE,
+    p_fecha_de_nacimiento empleado.fecha_de_nacimiento%TYPE,
     p_ocupacion empleado.ocupacion%TYPE,
     p_sexo empleado.sexo%TYPE,
     p_mensaje OUT VARCHAR2
     ) AS
+    f_edad NUMBER;
     BEGIN
         p_mensaje := 'Proceso ejecutado con éxito.';
-        INSERT INTO empleado(id_empleado, nombre, edad, ocupacion, sexo)
-        VALUES (secuencia_id_empleado.nextval, p_nombre, p_edad, p_ocupacion, p_sexo);
+        f_edad := calcular_edad(p_fecha_de_nacimiento);
+        INSERT INTO empleado(id_empleado, cedula, nombre, apellido, fecha_de_nacimiento, edad, ocupacion, sexo)
+        VALUES (secuencia_id_empleado.nextval, p_cedula, p_nombre, p_apellido, p_fecha_de_nacimiento, f_edad, p_ocupacion, p_sexo);
         COMMIT;
     EXCEPTION
         WHEN others THEN
