@@ -9,11 +9,12 @@ CREATE TABLE sucursal(
     PRIMARY KEY(id_sucursal)
 );
 
-CREATE SEQUENCE secuencia_id_sucursal
+CREATE SEQUENCE secuencia_id_sucursal(
 START WITH 1
 INCREMENT BY 1
 MAXVALUE 99999
-MINVALUE 1;
+MINVALUE 1
+);
 
 
 CREATE TABLE proveedor(
