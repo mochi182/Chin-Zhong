@@ -60,12 +60,14 @@ MINVALUE 1;
 
 CREATE TABLE articulo(
     id_articulo NUMBER NOT NULL,
+    id_categoria NUMBER NOT NULL,
     nombre VARCHAR(50) UNIQUE,
     marca VARCHAR(50),
     costo NUMBER(10,2),
     unidad_de_medida VARCHAR(30),
     PRIMARY KEY(id_articulo)
 );
+ALTER TABLE articulo ADD FOREIGN KEY (id_categoria) REFERENCES categoria(id_categoria);
 
 CREATE SEQUENCE secuencia_id_articulo
 START WITH 1
@@ -143,14 +145,6 @@ MAXVALUE 99999
 MINVALUE 1;
 
 /* --------------- Tablas de relaciones --------------- */
-
-CREATE TABLE articulo_pertenece_categoria(
-    id_articulo NUMBER NOT NULL,
-    id_categoria NUMBER NOT NULL,
-    PRIMARY KEY(id_articulo, id_categoria)
-);
-ALTER TABLE articulo_pertenece_categoria ADD FOREIGN KEY (id_articulo) REFERENCES articulo(id_articulo);
-ALTER TABLE articulo_pertenece_categoria ADD FOREIGN KEY (id_categoria) REFERENCES categoria(id_categoria);
 
 CREATE TABLE pedido_contiene_articulo(
     id_pedido NUMBER NOT NULL,

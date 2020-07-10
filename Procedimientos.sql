@@ -277,9 +277,50 @@ CREATE OR REPLACE TRIGGER inventario_tras_provision
     END inventario_tras_provision;
     /
 
+CREATE OR REPLACE TRIGGER inventario_tras_abasto
+        AFTER INSERT ON abast_contiene_articulo
+        FOR EACH ROW
+    DECLARE
+        CURSOR sucursal_provisionada IS
+        SELECT * FROM abastecimiento WHERE id_abastecimiento = :NEW.id_abastecimiento;
+        CURSOR bodega_desprovisionada IS
+        SELECT * FROM abastecimiento WHERE id_abastecimiento = :NEW.id_abastecimiento;
+    BEGIN
 
+        FOR data IN sucursal_provisionada LOOP
+            UPDATE sucursal_tiene_articulo SET
+                cantidad_anterior = cantidad_actual,
+                cantidad_actual = cantidad_actual + :NEW.cantidad,
+                fecha_modificacion = sysdate
+                WHERE (id_articulo = :NEW.id_articulo AND id_sucursal = data.id_sucursal);
+        END LOOP;
 
+        FOR data IN bodega_desprovisionada LOOP
+            UPDATE bodega_guarda_articulo SET
+                cantidad_anterior = cantidad_actual,
+                cantidad_actual = cantidad_actual - :NEW.cantidad,
+                fecha_modificacion = sysdate
+                WHERE (id_articulo = :NEW.id_articulo AND id_bodega = data.id_bodega);
+        END LOOP;
 
-CREATE OR REPLACE TRIGGER inventario_tras_abast
+    END inventario_tras_provision;
+    /
 
 CREATE OR REPLACE TRIGGER inventario_tras_pedido
+        AFTER INSERT ON pedido_contiene_articulo
+        FOR EACH ROW
+    DECLARE
+        CURSOR sucursal_desprovisionada IS
+        SELECT * FROM pedido WHERE id_pedido = :NEW.id_pedido;
+    BEGIN
+
+        FOR data IN sucursal_desprovisionada LOOP
+            UPDATE sucursal_tiene_articulo SET
+                cantidad_anterior = cantidad_actual,
+                cantidad_actual = cantidad_actual - :NEW.cantidad,
+                fecha_modificacion = sysdate
+                WHERE (id_articulo = :NEW.id_articulo AND id_sucursal = data.id_sucursal);
+        END LOOP;
+
+    END inventario_tras_pedido;
+    /
