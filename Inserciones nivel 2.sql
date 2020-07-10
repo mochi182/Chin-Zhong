@@ -1,3 +1,5 @@
+/* Inserciones nivel 2 */
+
 -- Insercion en tabla "Cliente".
 DECLARE
     v_cedula cliente.cedula%TYPE := '61234567';

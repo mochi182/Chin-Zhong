@@ -1,3 +1,5 @@
+/* Inserciones nivel 1 */
+
 -- Insercion en tabla "SUCURSAL".
 DECLARE
     v_direccion sucursal.direccion%TYPE := 'Panama, San Miguelito';

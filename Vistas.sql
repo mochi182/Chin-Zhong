@@ -5,6 +5,11 @@ CREATE OR REPLACE VIEW articulos_a_la_venta AS
     FROM sucursal_tiene_articulo S, articulo A
     WHERE A.id_articulo=S.id_articulo AND S.cantidad_actual <> 0;
 
+CREATE OR REPLACE VIEW inventario_bodega AS
+    SELECT  B.id_articulo AS "ID DEL ARTICULO", A.NOMBRE, B.id_bodega AS "BODEGA"
+    FROM bodega_guarda_articulo B, articulo A
+    WHERE A.id_articulo=B.id_articulo AND B.cantidad_actual <> 0;
+
 CREATE OR REPLACE VIEW categoria_articulos AS
     SELECT A.id_articulo AS "ID DEL ARTICULO", A.nombre, Z.abreviatura, Z.nombre AS "Nombre de categoria" 
     FROM articulo A, categoria Z
