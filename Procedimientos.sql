@@ -127,49 +127,32 @@ CREATE OR REPLACE PROCEDURE insertar_cliente(
 
 /* --------------- Nivel 3 --------------- */
 
-CREATE OR REPLACE PROCEDURE tramitar_provision(
-    -- Procedimiento para ingresar en tabla "provision_contiene_articulo" y "provision".
-    p_id_proveedor sucursal.id_sucursal%TYPE,
-    p_id_bodega bodega.id_bodega%TYPE,
+CREATE OR REPLACE PROCEDURE tramitar_provision_1(
+    -- Procedimiento para ingresar en tabla "provision".
+    p_id_provision provision.id_provision%TYPE,
+    p_id_bodega provision.id_bodega%TYPE,
+    p_id_proveedor provision.id_proveedor%TYPE,
     p_fecha provision.fecha%TYPE,
     p_costo provision.costo%TYPE,
     p_mensaje OUT VARCHAR2
     ) AS
     BEGIN
         p_mensaje := 'Proceso ejecutado con éxito.';
-        INSERT INTO abastecimiento(id_abastecimiento, id_proveedor, id_bodega, fecha, costo)
-        VALUES (secuencia_id_provision.nextval, p_id_proveedor, p_id_bodega, p_fecha, p_costo);
+        INSERT INTO provision(id_provision, id_bodega, id_proveedor, fecha, costo)
+        VALUES (p_id_provision, p_id_bodega, p_id_proveedor, p_fecha, p_costo);
         COMMIT;
     EXCEPTION
         WHEN others THEN
             p_mensaje := 'Error desconocido';
-    END insertar_abastecimiento;
+    END tramitar_provision_1;
     /
 
-CREATE OR REPLACE PROCEDURE tramitar_abastecimiento(
-    -- Procedimiento para ingresar en tabla "abast_contiene_articulo" y "abastecimiento".
-    p_id_sucursal sucursal.id_sucursal%TYPE,
-    p_id_bodega bodega.id_bodega%TYPE,
-    p_fecha abastecimiento.fecha%TYPE,
-    p_mensaje OUT VARCHAR2
-    ) AS
-    BEGIN
-        p_mensaje := 'Proceso ejecutado con éxito.';
-        INSERT INTO abastecimiento(id_abastecimiento, id_sucursal, id_bodega, fecha)
-        VALUES (secuencia_id_abastecimiento.nextval, p_id_sucursal, p_id_bodega, p_fecha);
-        COMMIT;
-    EXCEPTION
-        WHEN others THEN
-            p_mensaje := 'Error desconocido';
-    END insertar_abastecimiento;
-    /
-
-CREATE OR REPLACE PROCEDURE tramitar_pedido_1(
-    -- Procedimiento para ingresar en tabla "pedido_contiene_articulo".
-    p_id_pedido pedido_contiene_articulo.id_pedido%TYPE,
-    p_id_articulo pedido_contiene_articulo.id_articulo%TYPE,
-    p_cantidad pedido_contiene_articulo.cantidad%TYPE,
-    p_costo_total IN OUT pedido.costo%TYPE,
+CREATE OR REPLACE PROCEDURE tramitar_provision_2(
+    -- Procedimiento para ingresar en tabla "provision_contiene_articulo".
+    p_id_provision provision_contiene_articulo.id_provision%TYPE,
+    p_id_articulo provision_contiene_articulo.id_articulo%TYPE,
+    p_cantidad provision_contiene_articulo.cantidad%TYPE,
+    p_costo_total IN OUT provision.costo%TYPE,
     p_mensaje OUT VARCHAR2
     ) AS
     CURSOR costo_del_articulo IS
@@ -179,17 +162,57 @@ CREATE OR REPLACE PROCEDURE tramitar_pedido_1(
         FOR data IN costo_del_articulo LOOP
             p_costo_total := p_costo_total + (data.costo * p_cantidad);
         END LOOP;
-        DBMS_OUTPUT.PUT_LINE(p_costo_total);
-        INSERT INTO pedido_contiene_articulo(id_pedido, id_articulo, cantidad)
-        VALUES (p_id_pedido, p_id_articulo, p_cantidad);
+        INSERT INTO provision_contiene_articulo(id_provision, id_articulo, cantidad)
+        VALUES (p_id_provision, p_id_articulo, p_cantidad);
         COMMIT;
     EXCEPTION
         WHEN others THEN
             p_mensaje := 'Error desconocido';
-    END tramitar_pedido_1;
+    END tramitar_provision_2;
     /
 
-CREATE OR REPLACE PROCEDURE tramitar_pedido_2(
+------------------------------------------------------------
+
+CREATE OR REPLACE PROCEDURE tramitar_abastecimiento_1(
+    -- Procedimiento para ingresar en tabla "provision".
+    p_id_abastecimiento abastecimiento.id_abastecimiento%TYPE,
+    p_id_bodega abastecimiento.id_bodega%TYPE,
+    p_id_sucursal abastecimiento.id_sucursal%TYPE,
+    p_fecha abastecimiento.fecha%TYPE,
+    p_mensaje OUT VARCHAR2
+    ) AS
+    BEGIN
+        p_mensaje := 'Proceso ejecutado con éxito.';
+        INSERT INTO abastecimiento(id_abastecimiento, id_bodega, id_sucursal, fecha)
+        VALUES (p_id_abastecimiento, p_id_bodega, p_id_sucursal, p_fecha);
+        COMMIT;
+    EXCEPTION
+        WHEN others THEN
+            p_mensaje := 'Error desconocido';
+    END tramitar_abastecimiento_1;
+    /
+
+CREATE OR REPLACE PROCEDURE tramitar_abastecimiento_2(
+    -- Procedimiento para ingresar en tabla "abast_contiene_articulo".
+    p_id_abastecimiento abast_contiene_articulo.id_abastecimiento%TYPE,
+    p_id_articulo abast_contiene_articulo.id_articulo%TYPE,
+    p_cantidad abast_contiene_articulo.cantidad%TYPE,
+    p_mensaje OUT VARCHAR2
+    ) AS
+    BEGIN
+        p_mensaje := 'Proceso ejecutado con éxito.';
+        INSERT INTO abast_contiene_articulo(id_abastecimiento, id_articulo, cantidad)
+        VALUES (p_id_abastecimiento, p_id_articulo, p_cantidad);
+        COMMIT;
+    EXCEPTION
+        WHEN others THEN
+            p_mensaje := 'Error desconocido';
+    END tramitar_abastecimiento_2;
+    /
+
+------------------------------------------------------------
+
+CREATE OR REPLACE PROCEDURE tramitar_pedido_1(
     -- Procedimiento para ingresar en tabla "pedido".
     p_id_pedido pedido.id_pedido%TYPE,
     p_id_sucursal pedido.id_sucursal%TYPE,
@@ -206,8 +229,57 @@ CREATE OR REPLACE PROCEDURE tramitar_pedido_2(
     EXCEPTION
         WHEN others THEN
             p_mensaje := 'Error desconocido';
+    END tramitar_pedido_1;
+    /
+
+CREATE OR REPLACE PROCEDURE tramitar_pedido_2(
+    -- Procedimiento para ingresar en tabla "pedido_contiene_articulo".
+    p_id_pedido pedido_contiene_articulo.id_pedido%TYPE,
+    p_id_articulo pedido_contiene_articulo.id_articulo%TYPE,
+    p_cantidad pedido_contiene_articulo.cantidad%TYPE,
+    p_costo_total IN OUT pedido.costo%TYPE,
+    p_mensaje OUT VARCHAR2
+    ) AS
+    CURSOR costo_del_articulo IS
+        SELECT * FROM articulo WHERE id_articulo = p_id_articulo; 
+    BEGIN
+        p_mensaje := 'Proceso ejecutado con éxito.';
+        FOR data IN costo_del_articulo LOOP
+            p_costo_total := p_costo_total + (data.costo * p_cantidad);
+        END LOOP;
+        INSERT INTO pedido_contiene_articulo(id_pedido, id_articulo, cantidad)
+        VALUES (p_id_pedido, p_id_articulo, p_cantidad);
+        COMMIT;
+    EXCEPTION
+        WHEN others THEN
+            p_mensaje := 'Error desconocido';
     END tramitar_pedido_2;
     /
 
 /* --------------- Triggers --------------- */
 
+CREATE OR REPLACE TRIGGER inventario_tras_provision
+        AFTER INSERT ON provision_contiene_articulo
+        FOR EACH ROW
+    DECLARE
+        CURSOR bodega_provisionada IS
+        SELECT * FROM provision WHERE id_provision = :NEW.id_provision;
+    BEGIN
+
+        FOR data IN bodega_provisionada LOOP
+            UPDATE bodega_guarda_articulo SET
+                cantidad_anterior = cantidad_actual,
+                cantidad_actual = cantidad_actual + :NEW.cantidad,
+                fecha_modificacion = sysdate
+                WHERE (id_articulo = :NEW.id_articulo AND id_bodega = data.id_bodega);
+        END LOOP;
+
+    END inventario_tras_provision;
+    /
+
+
+
+
+CREATE OR REPLACE TRIGGER inventario_tras_abast
+
+CREATE OR REPLACE TRIGGER inventario_tras_pedido
