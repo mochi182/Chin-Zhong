@@ -9,12 +9,11 @@ CREATE TABLE sucursal(
     PRIMARY KEY(id_sucursal)
 );
 
-CREATE SEQUENCE secuencia_id_sucursal(
+CREATE SEQUENCE secuencia_id_sucursal
 START WITH 1
 INCREMENT BY 1
 MAXVALUE 99999
-MINVALUE 1
-);
+MINVALUE 1;
 
 
 CREATE TABLE proveedor(
@@ -143,21 +142,6 @@ INCREMENT BY 1
 MAXVALUE 99999
 MINVALUE 1;
 
-CREATE TABLE venta(
-    id_venta NUMBER NOT NULL,
-    cantidad NUMBER(10,2),
-    id_sucursal NUMBER,
-    id_pedido NUMBER, --FK
-    PRIMARY KEY(id_venta)
-);
-ALTER TABLE venta ADD FOREIGN KEY (id_pedido) REFERENCES pedido(id_pedido);
-
-CREATE SEQUENCE secuencia_id_venta
-START WITH 1
-INCREMENT BY 1
-MAXVALUE 99999
-MINVALUE 1;
-
 /* --------------- Relaciones --------------- */
 
 CREATE TABLE articulo_pertenece_categoria(
@@ -178,23 +162,23 @@ CREATE TABLE empleado_trabaja_sucursal(
 ALTER TABLE empleado_trabaja_sucursal ADD FOREIGN KEY (id_empleado) REFERENCES empleado(id_empleado);
 ALTER TABLE empleado_trabaja_sucursal ADD FOREIGN KEY (id_sucursal) REFERENCES sucursal(id_sucursal);
 
-CREATE TABLE articulo_conforma_pedido(
+CREATE TABLE pedido_contiene_articulo(
     id_pedido NUMBER NOT NULL,
     id_articulo NUMBER NOT NULL,
     cantidad NUMBER,
     PRIMARY KEY(id_pedido, id_articulo)
 );
-ALTER TABLE articulo_conforma_pedido ADD FOREIGN KEY (id_pedido) REFERENCES pedido(id_pedido);
-ALTER TABLE articulo_conforma_pedido ADD FOREIGN KEY (id_articulo) REFERENCES articulo(id_articulo);
+ALTER TABLE pedido_contiene_articulo ADD FOREIGN KEY (id_pedido) REFERENCES pedido(id_pedido);
+ALTER TABLE pedido_contiene_articulo ADD FOREIGN KEY (id_articulo) REFERENCES articulo(id_articulo);
 
-CREATE TABLE articulo_conforma_abasto(
+CREATE TABLE abasto_contiene_articulo(
     id_abasto NUMBER NOT NULL,
     id_articulo NUMBER NOT NULL,
     cantidad NUMBER,
     PRIMARY KEY(id_abasto, id_articulo)
 );
-ALTER TABLE articulo_conforma_abasto ADD FOREIGN KEY (id_abasto) REFERENCES abasto(id_abasto);
-ALTER TABLE articulo_conforma_abasto ADD FOREIGN KEY (id_articulo) REFERENCES articulo(id_articulo);
+ALTER TABLE abasto_contiene_articulo ADD FOREIGN KEY (id_abasto) REFERENCES abasto(id_abasto);
+ALTER TABLE abasto_contiene_articulo ADD FOREIGN KEY (id_articulo) REFERENCES articulo(id_articulo);
 
 CREATE TABLE sucursal_tiene_articulo(
     id_sucursal NUMBER NOT NULL,
@@ -223,4 +207,3 @@ ALTER TABLE proveedor_provee_articulo ADD FOREIGN KEY (id_proveedor) REFERENCES 
 ALTER TABLE proveedor_provee_articulo ADD FOREIGN KEY (id_articulo) REFERENCES articulo(id_articulo);
 
 
-/* --------------- LALALAL --------------- */
