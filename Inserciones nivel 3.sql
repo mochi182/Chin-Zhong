@@ -48,7 +48,7 @@ DECLARE
         SELECT * FROM bodega_guarda_articulo;
 BEGIN
     v_articulos := lista_articulos(1,2); -- Lista de artículos
-    v_cantidades := lista_cantidades(5,5); -- Cantidad por artículo
+    v_cantidades := lista_cantidades(1,3); -- Cantidad por artículo
 
     FOR cuenta IN  1..v_cuantos_articulos LOOP
         FOR data IN articulos_en_bodega LOOP
@@ -86,7 +86,7 @@ DECLARE
         SELECT * FROM sucursal_tiene_articulo;
 BEGIN
     v_articulos := lista_articulos(1,2); -- Lista de artículos
-    v_cantidades := lista_cantidades(1,5); -- Cantidad por artículo
+    v_cantidades := lista_cantidades(1,3); -- Cantidad por artículo
 
     FOR cuenta IN  1..v_cuantos_articulos LOOP
         FOR data IN articulos_en_sucursal LOOP

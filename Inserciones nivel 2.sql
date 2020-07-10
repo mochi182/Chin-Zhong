@@ -32,7 +32,7 @@ DECLARE
     unidad_de_medida articulo.unidad_de_medida%TYPE := 'unidades';
     mensaje VARCHAR2(50);
 BEGIN
-    insertar_articulo(v_nombre, v_marca, v_costo, unidad_de_medida, mensaje);
+    insertar_articulo(v_nombre, v_categoria, v_marca, v_costo, unidad_de_medida, mensaje);
     DBMS_OUTPUT.PUT_LINE(mensaje);
 END;
 /
@@ -45,7 +45,7 @@ DECLARE
     unidad_de_medida articulo.unidad_de_medida%TYPE := 'unidades';
     mensaje VARCHAR2(50);
 BEGIN
-    insertar_articulo(v_nombre, v_marca, v_costo, unidad_de_medida, mensaje);
+    insertar_articulo(v_nombre, v_categoria, v_marca, v_costo, unidad_de_medida, mensaje);
     DBMS_OUTPUT.PUT_LINE(mensaje);
 END;
 /
@@ -58,7 +58,7 @@ DECLARE
     unidad_de_medida articulo.unidad_de_medida%TYPE := 'unidades';
     mensaje VARCHAR2(50);
 BEGIN
-    insertar_articulo(v_nombre, v_marca, v_costo, unidad_de_medida, mensaje);
+    insertar_articulo(v_nombre, v_categoria, v_marca, v_costo, unidad_de_medida, mensaje);
     DBMS_OUTPUT.PUT_LINE(mensaje);
 END;
 /

@@ -78,6 +78,7 @@ CREATE OR REPLACE PROCEDURE insertar_bodega(
 CREATE OR REPLACE PROCEDURE insertar_articulo(
     -- Procedimiento para ingresar en tabla "articulo".
     p_nombre articulo.nombre%TYPE,
+    p_id_categoria articulo.id_categoria%TYPE,
     p_marca articulo.marca%TYPE,
     p_costo articulo.costo%TYPE,
     p_unidad_de_medida articulo.unidad_de_medida%TYPE,
@@ -89,8 +90,8 @@ CREATE OR REPLACE PROCEDURE insertar_articulo(
         SELECT * FROM bodega;
     BEGIN
         p_mensaje := 'Proceso ejecutado con éxito.';
-        INSERT INTO articulo(id_articulo, nombre, marca, costo, unidad_de_medida)
-        VALUES (secuencia_id_articulo.nextval, p_nombre, p_marca, p_costo, p_unidad_de_medida);
+        INSERT INTO articulo(id_articulo, id_categoria, nombre, marca, costo, unidad_de_medida)
+        VALUES (secuencia_id_articulo.nextval, p_id_categoria, p_nombre, p_marca, p_costo, p_unidad_de_medida);
         FOR data IN sucursales LOOP
             INSERT INTO sucursal_tiene_articulo(id_sucursal, id_articulo, cantidad_anterior, cantidad_actual, fecha_modificacion)
             VALUES (data.id_sucursal, secuencia_id_articulo.currval, 0, 0, sysdate);
@@ -324,3 +325,4 @@ CREATE OR REPLACE TRIGGER inventario_tras_pedido
 
     END inventario_tras_pedido;
     /
+
