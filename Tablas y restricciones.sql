@@ -61,33 +61,13 @@ MINVALUE 1;
 CREATE TABLE articulo(
     id_articulo NUMBER NOT NULL,
     nombre VARCHAR(50) UNIQUE,
-    descripcion VARCHAR(100),
+    marca VARCHAR(50),
     costo NUMBER(10,2),
     unidad_de_medida VARCHAR(30),
     PRIMARY KEY(id_articulo)
 );
 
 CREATE SEQUENCE secuencia_id_articulo
-START WITH 1
-INCREMENT BY 1
-MAXVALUE 99999
-MINVALUE 1;
-
-CREATE TABLE empleado(
-    id_empleado NUMBER NOT NULL,
-    cedula VARCHAR(30),
-    nombre VARCHAR(50),
-    apellido VARCHAR(50),
-    fecha_de_nacimiento DATE,
-    edad NUMBER,
-    ocupacion VARCHAR(50),
-    sexo VARCHAR(1),
-    PRIMARY KEY(id_empleado)
-);
-ALTER TABLE empleado ADD CHECK (sexo='M' OR sexo='F');
-ALTER TABLE empleado ADD UNIQUE (cedula);
-
-CREATE SEQUENCE secuencia_id_empleado
 START WITH 1
 INCREMENT BY 1
 MAXVALUE 99999
@@ -112,16 +92,34 @@ MINVALUE 1;
 
 /* --------------- Nivel 3: Actividades --------------- */
 
-CREATE TABLE abasto(
-    id_abasto NUMBER NOT NULL,
+CREATE TABLE provision(
+    id_provision NUMBER NOT NULL,
+    id_proveedor NUMBER, --FK
+    id_bodega NUMBER, --FK
+    fecha DATE,
+    costo NUMBER(10,2),
+    PRIMARY KEY(id_provision)
+);
+ALTER TABLE provision ADD FOREIGN KEY (id_proveedor) REFERENCES proveedor(id_proveedor);
+ALTER TABLE provision ADD FOREIGN KEY (id_bodega) REFERENCES bodega(id_bodega);
+
+CREATE SEQUENCE secuencia_id_provision
+START WITH 1
+INCREMENT BY 1
+MAXVALUE 99999
+MINVALUE 1;
+
+CREATE TABLE abastecimiento(
+    id_abastecimiento NUMBER NOT NULL,
     id_sucursal NUMBER, --FK
     id_bodega NUMBER, --FK
-    PRIMARY KEY(id_abasto)
+    fecha DATE,
+    PRIMARY KEY(id_abastecimiento)
 );
-ALTER TABLE abasto ADD FOREIGN KEY (id_sucursal) REFERENCES sucursal(id_sucursal);
-ALTER TABLE abasto ADD FOREIGN KEY (id_bodega) REFERENCES bodega(id_bodega);
+ALTER TABLE abastecimiento ADD FOREIGN KEY (id_sucursal) REFERENCES sucursal(id_sucursal);
+ALTER TABLE abastecimiento ADD FOREIGN KEY (id_bodega) REFERENCES bodega(id_bodega);
 
-CREATE SEQUENCE secuencia_id_abasto
+CREATE SEQUENCE secuencia_id_abastecimiento
 START WITH 1
 INCREMENT BY 1
 MAXVALUE 99999
@@ -131,6 +129,8 @@ CREATE TABLE pedido(
     id_pedido NUMBER NOT NULL,
     id_sucursal NUMBER, --FK
     id_cliente NUMBER, --FK
+    fecha DATE,
+    costo NUMBER(10,2),
     PRIMARY KEY(id_pedido)
 );
 ALTER TABLE pedido ADD FOREIGN KEY (id_sucursal) REFERENCES sucursal(id_sucursal);
@@ -142,7 +142,7 @@ INCREMENT BY 1
 MAXVALUE 99999
 MINVALUE 1;
 
-/* --------------- Relaciones --------------- */
+/* --------------- Tablas de relaciones --------------- */
 
 CREATE TABLE articulo_pertenece_categoria(
     id_articulo NUMBER NOT NULL,
@@ -151,16 +151,6 @@ CREATE TABLE articulo_pertenece_categoria(
 );
 ALTER TABLE articulo_pertenece_categoria ADD FOREIGN KEY (id_articulo) REFERENCES articulo(id_articulo);
 ALTER TABLE articulo_pertenece_categoria ADD FOREIGN KEY (id_categoria) REFERENCES categoria(id_categoria);
-
-CREATE TABLE empleado_trabaja_sucursal(
-    id_empleado NUMBER NOT NULL,
-    id_sucursal NUMBER NOT NULL,
-    fecha_inicio DATE NOT NULL,
-    fecha_finalizacion DATE,
-    PRIMARY KEY(id_empleado, id_sucursal, fecha_inicio)
-);
-ALTER TABLE empleado_trabaja_sucursal ADD FOREIGN KEY (id_empleado) REFERENCES empleado(id_empleado);
-ALTER TABLE empleado_trabaja_sucursal ADD FOREIGN KEY (id_sucursal) REFERENCES sucursal(id_sucursal);
 
 CREATE TABLE pedido_contiene_articulo(
     id_pedido NUMBER NOT NULL,
@@ -171,19 +161,30 @@ CREATE TABLE pedido_contiene_articulo(
 ALTER TABLE pedido_contiene_articulo ADD FOREIGN KEY (id_pedido) REFERENCES pedido(id_pedido);
 ALTER TABLE pedido_contiene_articulo ADD FOREIGN KEY (id_articulo) REFERENCES articulo(id_articulo);
 
-CREATE TABLE abasto_contiene_articulo(
-    id_abasto NUMBER NOT NULL,
+CREATE TABLE abast_contiene_articulo(
+    id_abastecimiento NUMBER NOT NULL,
     id_articulo NUMBER NOT NULL,
     cantidad NUMBER,
-    PRIMARY KEY(id_abasto, id_articulo)
+    PRIMARY KEY(id_abastecimiento, id_articulo)
 );
-ALTER TABLE abasto_contiene_articulo ADD FOREIGN KEY (id_abasto) REFERENCES abasto(id_abasto);
-ALTER TABLE abasto_contiene_articulo ADD FOREIGN KEY (id_articulo) REFERENCES articulo(id_articulo);
+ALTER TABLE abast_contiene_articulo ADD FOREIGN KEY (id_abastecimiento) REFERENCES abastecimiento(id_abastecimiento);
+ALTER TABLE abast_contiene_articulo ADD FOREIGN KEY (id_articulo) REFERENCES articulo(id_articulo);
+
+CREATE TABLE provision_contiene_articulo(
+    id_provision NUMBER NOT NULL,
+    id_articulo NUMBER NOT NULL,
+    cantidad NUMBER,
+    PRIMARY KEY(id_provision, id_articulo)
+);
+ALTER TABLE provision_contiene_articulo ADD FOREIGN KEY (id_provision) REFERENCES provision(id_provision);
+ALTER TABLE provision_contiene_articulo ADD FOREIGN KEY (id_articulo) REFERENCES articulo(id_articulo);
 
 CREATE TABLE sucursal_tiene_articulo(
     id_sucursal NUMBER NOT NULL,
     id_articulo NUMBER NOT NULL,
-    cantidad NUMBER,
+    cantidad_anterior NUMBER,
+    cantidad_actual NUMBER,
+    fecha_modificacion DATE,
     PRIMARY KEY(id_sucursal, id_articulo)
 );
 ALTER TABLE sucursal_tiene_articulo ADD FOREIGN KEY (id_sucursal) REFERENCES sucursal(id_sucursal);
@@ -192,18 +193,10 @@ ALTER TABLE sucursal_tiene_articulo ADD FOREIGN KEY (id_articulo) REFERENCES art
 CREATE TABLE bodega_guarda_articulo(
     id_bodega NUMBER NOT NULL,
     id_articulo NUMBER NOT NULL,
-    cantidad NUMBER,
+    cantidad_anterior NUMBER,
+    cantidad_actual NUMBER,
+    fecha_modificacion DATE,
     PRIMARY KEY(id_bodega, id_articulo)
 );
 ALTER TABLE bodega_guarda_articulo ADD FOREIGN KEY (id_bodega) REFERENCES bodega(id_bodega);
 ALTER TABLE bodega_guarda_articulo ADD FOREIGN KEY (id_articulo) REFERENCES articulo(id_articulo);
-
-CREATE TABLE proveedor_provee_articulo(
-    id_proveedor NUMBER NOT NULL,
-    id_articulo NUMBER NOT NULL,
-    PRIMARY KEY(id_proveedor, id_articulo)
-);
-ALTER TABLE proveedor_provee_articulo ADD FOREIGN KEY (id_proveedor) REFERENCES proveedor(id_proveedor);
-ALTER TABLE proveedor_provee_articulo ADD FOREIGN KEY (id_articulo) REFERENCES articulo(id_articulo);
-
-

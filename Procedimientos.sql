@@ -78,15 +78,15 @@ CREATE OR REPLACE PROCEDURE insertar_bodega(
 CREATE OR REPLACE PROCEDURE insertar_articulo(
     -- Procedimiento para ingresar en tabla "bodega".
     p_nombre articulo.nombre%TYPE,
-    p_descripcion articulo.descripcion%TYPE,
+    p_marca articulo.marca%TYPE,
     p_costo articulo.costo%TYPE,
     p_unidad_de_medida articulo.unidad_de_medida%TYPE,
     p_mensaje OUT VARCHAR2
     ) AS
     BEGIN
         p_mensaje := 'Proceso ejecutado con éxito.';
-        INSERT INTO articulo(id_articulo, nombre, descripcion, costo, unidad_de_medida)
-        VALUES (secuencia_id_articulo.nextval, p_nombre, p_descripcion, p_costo, p_unidad_de_medida);
+        INSERT INTO articulo(id_articulo, nombre, marca, costo, unidad_de_medida)
+        VALUES (secuencia_id_articulo.nextval, p_nombre, p_marca, p_costo, p_unidad_de_medida);
         COMMIT;
     EXCEPTION
         WHEN others THEN
@@ -94,28 +94,6 @@ CREATE OR REPLACE PROCEDURE insertar_articulo(
     END insertar_articulo;
     /
 
-CREATE OR REPLACE PROCEDURE insertar_empleado(
-    -- Procedimiento para ingresar en tabla "bodega".
-    p_cedula empleado.cedula%TYPE,
-    p_nombre empleado.nombre%TYPE,
-    p_apellido empleado.apellido%TYPE,
-    p_fecha_de_nacimiento empleado.fecha_de_nacimiento%TYPE,
-    p_ocupacion empleado.ocupacion%TYPE,
-    p_sexo empleado.sexo%TYPE,
-    p_mensaje OUT VARCHAR2
-    ) AS
-    f_edad NUMBER;
-    BEGIN
-        p_mensaje := 'Proceso ejecutado con éxito.';
-        f_edad := calcular_edad(p_fecha_de_nacimiento);
-        INSERT INTO empleado(id_empleado, cedula, nombre, apellido, fecha_de_nacimiento, edad, ocupacion, sexo)
-        VALUES (secuencia_id_empleado.nextval, p_cedula, p_nombre, p_apellido, p_fecha_de_nacimiento, f_edad, p_ocupacion, p_sexo);
-        COMMIT;
-    EXCEPTION
-        WHEN others THEN
-            p_mensaje := 'Error desconocido';
-    END insertar_empleador;
-    /
 
 CREATE OR REPLACE PROCEDURE insertar_cliente(
     -- Procedimiento para ingresar en tabla "bodega".
@@ -138,36 +116,61 @@ CREATE OR REPLACE PROCEDURE insertar_cliente(
 
 /* --------------- Nivel 3 --------------- */
 
-CREATE OR REPLACE PROCEDURE insertar_abasto(
-    -- Procedimiento para ingresar en tabla "bodega".
-    p_id_sucursal sucursal.id_sucursal%TYPE,
+CREATE OR REPLACE PROCEDURE insertar_provision(
+    -- Procedimiento para ingresar en tabla "provision".
+    p_id_proveedor sucursal.id_sucursal%TYPE,
     p_id_bodega bodega.id_bodega%TYPE,
+    p_fecha provision.fecha%TYPE,
+    p_costo provision.costo%TYPE,
     p_mensaje OUT VARCHAR2
     ) AS
     BEGIN
         p_mensaje := 'Proceso ejecutado con éxito.';
-        INSERT INTO abasto(id_abasto, id_sucursal, id_bodega)
-        VALUES (secuencia_id_abasto.nextval, p_id_sucursal, p_id_bodega);
+        INSERT INTO abastecimiento(id_abastecimiento, id_proveedor, id_bodega, fecha, costo)
+        VALUES (secuencia_id_provision.nextval, p_id_proveedor, p_id_bodega, p_fecha, p_costo);
         COMMIT;
     EXCEPTION
         WHEN others THEN
             p_mensaje := 'Error desconocido';
-    END insertar_abasto;
+    END insertar_abastecimiento;
+    /
+
+CREATE OR REPLACE PROCEDURE insertar_abastecimiento(
+    -- Procedimiento para ingresar en tabla "abastecimiento".
+    p_id_sucursal sucursal.id_sucursal%TYPE,
+    p_id_bodega bodega.id_bodega%TYPE,
+    p_fecha abastecimiento.fecha%TYPE,
+    p_mensaje OUT VARCHAR2
+    ) AS
+    BEGIN
+        p_mensaje := 'Proceso ejecutado con éxito.';
+        INSERT INTO abastecimiento(id_abastecimiento, id_sucursal, id_bodega, fecha)
+        VALUES (secuencia_id_abastecimiento.nextval, p_id_sucursal, p_id_bodega, p_fecha);
+        COMMIT;
+    EXCEPTION
+        WHEN others THEN
+            p_mensaje := 'Error desconocido';
+    END insertar_abastecimiento;
     /
 
 CREATE OR REPLACE PROCEDURE insertar_pedido(
     -- Procedimiento para ingresar en tabla "bodega".
     p_id_sucursal sucursal.id_sucursal%TYPE,
     p_id_cliente cliente.id_cliente%TYPE,
+    p_fecha pedido.fecha%TYPE,
+    p_costo pedido.costo%TYPE,
     p_mensaje OUT VARCHAR2
     ) AS
     BEGIN
         p_mensaje := 'Proceso ejecutado con éxito.';
-        INSERT INTO pedido(id_pedido, id_sucursal, id_cliente)
-        VALUES (secuencia_id_pedido.nextval, p_id_sucursal, p_id_cliente);
+        INSERT INTO pedido(id_pedido, id_sucursal, id_cliente, fecha, costo)
+        VALUES (secuencia_id_pedido.nextval, p_id_sucursal, p_id_cliente, p_fecha, p_costo);
         COMMIT;
     EXCEPTION
         WHEN others THEN
             p_mensaje := 'Error desconocido';
     END insertar_pedido;
     /
+
+/* --------------- Triggers --------------- */
+
