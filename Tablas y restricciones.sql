@@ -129,7 +129,7 @@ MINVALUE 1;
 
 CREATE TABLE pedido(
     id_pedido NUMBER NOT NULL,
-    id_sucursal NUMBER, NOT NULL --FK
+    id_sucursal NUMBER NOT NULL, --FK
     id_cliente NUMBER, --FK
     fecha DATE,
     costo NUMBER(10,2),
