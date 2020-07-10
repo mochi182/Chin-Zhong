@@ -94,8 +94,8 @@ MINVALUE 1;
 
 CREATE TABLE provision(
     id_provision NUMBER NOT NULL,
-    id_proveedor NUMBER, --FK
-    id_bodega NUMBER, --FK
+    id_proveedor NUMBER NOT NULL, --FK
+    id_bodega NUMBER NOT NULL, --FK
     fecha DATE,
     costo NUMBER(10,2),
     PRIMARY KEY(id_provision)
@@ -111,8 +111,8 @@ MINVALUE 1;
 
 CREATE TABLE abastecimiento(
     id_abastecimiento NUMBER NOT NULL,
-    id_sucursal NUMBER, --FK
-    id_bodega NUMBER, --FK
+    id_sucursal NUMBER NOT NULL, --FK
+    id_bodega NUMBER NOT NULL, --FK
     fecha DATE,
     PRIMARY KEY(id_abastecimiento)
 );
@@ -127,7 +127,7 @@ MINVALUE 1;
 
 CREATE TABLE pedido(
     id_pedido NUMBER NOT NULL,
-    id_sucursal NUMBER, --FK
+    id_sucursal NUMBER, NOT NULL --FK
     id_cliente NUMBER, --FK
     fecha DATE,
     costo NUMBER(10,2),

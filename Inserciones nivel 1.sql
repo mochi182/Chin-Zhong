@@ -255,7 +255,7 @@ DECLARE
     v_nombre categoria.nombre%TYPE := 'Plomeria';
     mensaje VARCHAR2(50);
 BEGIN
-    insertar_categoria(v_abreviatura, v_descripcion, v_estado, mensaje)
+    insertar_categoria(v_abreviatura, v_descripcion, v_nombre, mensaje);
     DBMS_OUTPUT.PUT_LINE(mensaje);
 END;
 /
@@ -266,7 +266,7 @@ DECLARE
     v_nombre categoria.nombre%TYPE := 'Electricidad';
     mensaje VARCHAR2(50);
 BEGIN
-    insertar_categoria(v_abreviatura, v_descripcion, v_estado, mensaje)
+    insertar_categoria(v_abreviatura, v_descripcion, v_nombre, mensaje);
     DBMS_OUTPUT.PUT_LINE(mensaje);
 END;
 /
@@ -277,7 +277,7 @@ DECLARE
     v_nombre categoria.nombre%TYPE := 'Jardineria';
     mensaje VARCHAR2(50);
 BEGIN
-    insertar_categoria(v_abreviatura, v_descripcion, v_estado, mensaje)
+    insertar_categoria(v_abreviatura, v_descripcion, v_nombre, mensaje);
     DBMS_OUTPUT.PUT_LINE(mensaje);
 END;
 /
@@ -288,7 +288,7 @@ DECLARE
     v_nombre categoria.nombre%TYPE := 'Hogar';
     mensaje VARCHAR2(50);
 BEGIN
-    insertar_categoria(v_abreviatura, v_descripcion, v_estado, mensaje)
+    insertar_categoria(v_abreviatura, v_descripcion, v_nombre, mensaje);
     DBMS_OUTPUT.PUT_LINE(mensaje);
 END;
 /
@@ -299,7 +299,7 @@ DECLARE
     v_nombre categoria.nombre%TYPE := 'Automoviles';
     mensaje VARCHAR2(50);
 BEGIN
-    insertar_categoria(v_abreviatura, v_descripcion, v_estado, mensaje)
+    insertar_categoria(v_abreviatura, v_descripcion, v_nombre, mensaje);
     DBMS_OUTPUT.PUT_LINE(mensaje);
 END;
 /
@@ -310,7 +310,7 @@ DECLARE
     v_nombre categoria.nombre%TYPE := 'Linea Blanca';
     mensaje VARCHAR2(50);
 BEGIN
-    insertar_categoria(v_abreviatura, v_descripcion, v_estado, mensaje)
+    insertar_categoria(v_abreviatura, v_descripcion, v_nombre, mensaje);
     DBMS_OUTPUT.PUT_LINE(mensaje);
 END;
 /
@@ -321,7 +321,7 @@ DECLARE
     v_nombre categoria.nombre%TYPE := 'Tornilleria';
     mensaje VARCHAR2(50);
 BEGIN
-    insertar_categoria(v_abreviatura, v_descripcion, v_estado, mensaje)
+    insertar_categoria(v_abreviatura, v_descripcion, v_nombre, mensaje);
     DBMS_OUTPUT.PUT_LINE(mensaje);
 END;
 /
@@ -332,7 +332,7 @@ DECLARE
     v_nombre categoria.nombre%TYPE := 'Herramientas electricas';
     mensaje VARCHAR2(50);
 BEGIN
-    insertar_categoria(v_abreviatura, v_descripcion, v_estado, mensaje)
+    insertar_categoria(v_abreviatura, v_descripcion, v_nombre, mensaje);
     DBMS_OUTPUT.PUT_LINE(mensaje);
 END;
 /
@@ -343,7 +343,7 @@ DECLARE
     v_nombre categoria.nombre%TYPE := 'Pinturas';
     mensaje VARCHAR2(50);
 BEGIN
-    insertar_categoria(v_abreviatura, v_descripcion, v_estado, mensaje)
+    insertar_categoria(v_abreviatura, v_descripcion, v_nombre, mensaje);
     DBMS_OUTPUT.PUT_LINE(mensaje);
 END;
 /
