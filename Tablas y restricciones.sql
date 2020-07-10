@@ -1,6 +1,6 @@
 /* ------------------------- DDL ------------------------- */
 
-/* --------------- Nivel 1: Tablero --------------- */
+/* --------------- Nivel 1: Estructura --------------- */
 
 CREATE TABLE sucursal(
     id_sucursal NUMBER NOT NULL,
@@ -10,20 +10,6 @@ CREATE TABLE sucursal(
 );
 
 CREATE SEQUENCE secuencia_id_sucursal
-START WITH 1
-INCREMENT BY 1
-MAXVALUE 99999
-MINVALUE 1;
-
-
-CREATE TABLE proveedor(
-    id_proveedor NUMBER,
-    nombre VARCHAR(50),
-    direccion VARCHAR(50),
-    PRIMARY KEY(id_proveedor)
-);
-
-CREATE SEQUENCE secuencia_id_proveedor
 START WITH 1
 INCREMENT BY 1
 MAXVALUE 99999
@@ -56,7 +42,20 @@ INCREMENT BY 1
 MAXVALUE 99999
 MINVALUE 1;
 
-/* --------------- Nivel 2: Fichas --------------- */
+/* --------------- Nivel 2: Activos --------------- */
+
+CREATE TABLE proveedor(
+    id_proveedor NUMBER,
+    nombre VARCHAR(50),
+    direccion VARCHAR(50),
+    PRIMARY KEY(id_proveedor)
+);
+
+CREATE SEQUENCE secuencia_id_proveedor
+START WITH 1
+INCREMENT BY 1
+MAXVALUE 99999
+MINVALUE 1;
 
 CREATE TABLE articulo(
     id_articulo NUMBER NOT NULL,
